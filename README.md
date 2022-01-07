@@ -1,4 +1,4 @@
-<h1  align="center">Olá, meu nome é Samuel.</h1>
+<h1 align="center">Olá, meu nome é Samuel.</h1>
 
 Sou back-end developer formado em Sistemas de Informação e gosto de desenvolver com PHP, Python e JavaScript/TypeScript.
 
@@ -34,6 +34,7 @@ Trabalho atualmente com PHP, Laravel e Postgress.
 
 ### Gráficos
 <div>
-    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&show_icons=true&theme=github_dark&layout=compact" height="200">
-    <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark" height="200">
+    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&show_icons=true&theme=github_dark&layout=compact&hide_border=true" height="200">
+    <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark&hide_border=true" height="200">
+    <img src="http://github-readme-streak-stats.herokuapp.com?user=Sam231198&theme=github-dark&hide_border=true&date_format=j%20M%5B%20Y%5D&stroke=4C8EDA&dates=4C8EDA&ring=4C8EDA" height="200">
 </div>
