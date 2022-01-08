@@ -2,7 +2,7 @@
 
 Sou back-end developer formado em Sistemas de Informação e gosto de desenvolver com PHP, Python e JavaScript/TypeScript.
 
-Atualmente trabalho como back-end developer na [GeoInova](geoinova.com.br).
+Atualmente trabalho como back-end developer na [GeoInova](https://geoinova.com.br).
 
 [<img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" />](https://www.linkedin.com/in/samuelmarques231198/)
 
