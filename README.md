@@ -1,46 +1,72 @@
-<h1 align="center">Olá, meu nome é Samuel.</h1>
+<h1 align="center">👋 Olá, eu sou Samuel Marques</h1>
 
-Sou back-end developer formado em Sistemas de Informação e gosto de desenvolver com PHP, Python e JavaScript/TypeScript.
+<p align="center">
+  <b>Back-end Developer · PHP · Laravel · PostgreSQL</b><br/>
+  Construindo APIs, pipelines de dados e sistemas escaláveis há 5+ anos.<br/>
+  Atualmente na <a href="https://geoinova.com.br">GeoInova</a> · Brasília, DF 🇧🇷
+</p>
 
-Atualmente trabalho como back-end developer na [GeoInova](https://geoinova.com.br).
+<p align="center">
+  <a href="https://www.linkedin.com/in/samuelmarques231198/">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
+  </a>
+  <a href="mailto:samuelmarques231198@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
+  </a>
+</p>
 
-[<img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" />](https://www.linkedin.com/in/samuelmarques231198/)
+---
 
-## Stacks
+## 🧑‍💻 Sobre mim
+
+- 💼 Back-end developer na **GeoInova** desde 2021
+- 🚀 Desenvolvi um motor de busca de leads com throughput de **341 leads/hora**
+- 🎓 Bacharel em Sistemas de Informação · Faculdade JK (2021)
+- 📍 Brasília, DF · aberto a oportunidades remotas
+- 📬 samuelmarques231198@gmail.com
+
+---
+
+## 🛠 Stack técnica
 
 ### Linguagens
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
-![Python](https://img.shields.io/badge/Python-00264d?style=for-the-badge&logo=python&logoColor=FFD43B)
-![Java](https://img.shields.io/badge/Java-FFFFFF?style=for-the-badge&logo=java&logoColor=red)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![HTML 5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS 3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=FFD43B)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 
-### Frameworks
+### Frameworks & Libs
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![Node](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![SpringBoot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
-![Vue](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
-![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 
-### Database
+### Banco de Dados
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
-### Tools e IDE
+### Infra & Ferramentas
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)
-![Isominia](https://img.shields.io/badge/Insomnia-5849be?style=for-the-badge&logo=Insomnia&logoColor=white)
-![xampp](https://img.shields.io/badge/Xampp-F37623?style=for-the-badge&logo=xampp&logoColor=white)
-![VSCode](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
-![GIT](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
 
-### Gráficos
-<div>
-    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&show_icons=true&theme=github_dark&layout=compact&hide_border=true" height="200">
-    <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark&hide_border=true" height="200">
-    <img src="http://github-readme-streak-stats.herokuapp.com?user=Sam231198&theme=github-dark&hide_border=true&date_format=j%20M%5B%20Y%5D&stroke=4C8EDA&dates=4C8EDA&ring=4C8EDA" height="200">
+---
+
+## 📊 GitHub Stats
+
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&show_icons=true&theme=github_dark&layout=compact&hide_border=true" height="180"/>
+  <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark&hide_border=true" height="180"/>
+</div>
+
+<div align="center">
+  <img src="https://streak-stats.demolab.com?user=Sam231198&theme=github-dark&hide_border=true&date_format=j%20M%5B%20Y%5D" height="180"/>
 </div>
