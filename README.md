@@ -3,6 +3,7 @@
 <p align="center">
   <b>Back-end Developer · PHP · Laravel · PostgreSQL</b><br/>
   Construindo APIs, pipelines de dados e sistemas escaláveis há 5+ anos.<br/>
+  Brasília, DF 🇧🇷
 </p>
 
 <p align="center">
@@ -18,7 +19,7 @@
 
 ## 🧑‍💻 Sobre mim
 
-- 💼 Back-end developer na **GeoInova** desde 2021
+- 💼 Back-end developer com 5+ anos de experiência
 - 🚀 Desenvolvi um motor de busca de leads com throughput de **341 leads/hora**
 - 🎓 Bacharel em Sistemas de Informação · Faculdade JK (2021)
 - 📍 Brasília, DF · aberto a oportunidades remotas
