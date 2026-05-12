@@ -3,7 +3,6 @@
 <p align="center">
   <b>Back-end Developer · PHP · Laravel · PostgreSQL</b><br/>
   Construindo APIs, pipelines de dados e sistemas escaláveis há 5+ anos.<br/>
-  Atualmente na <a href="https://geoinova.com.br">GeoInova</a> · Brasília, DF 🇧🇷
 </p>
 
 <p align="center">
