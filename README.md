@@ -20,7 +20,6 @@
 ## 🧑‍💻 Sobre mim
 
 - 💼 Back-end developer com 5+ anos de experiência
-- 🚀 Desenvolvi um motor de busca de leads com throughput de **341 leads/hora**
 - 🎓 Bacharel em Sistemas de Informação · Faculdade JK (2021)
 - 📍 Brasília, DF · aberto a oportunidades remotas
 - 📬 samuelmarques231198@gmail.com
