@@ -62,10 +62,18 @@
 ## 📊 GitHub Stats
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&show_icons=true&theme=github_dark&layout=compact&hide_border=true" height="180"/>
+  <!-- Linguagens mais usadas -->
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&layout=compact&theme=github_dark&hide_border=true" height="180"/>
+  
+  <!-- Estatísticas gerais -->
   <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark&hide_border=true" height="180"/>
 </div>
 
 <div align="center">
+  <!-- Streak -->
   <img src="https://streak-stats.demolab.com?user=Sam231198&theme=github-dark&hide_border=true&date_format=j%20M%5B%20Y%5D" height="180"/>
+</div>
+
+<div align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=Sam231198&theme=github-dark&hide_border=true" height="250"/>
 </div>
