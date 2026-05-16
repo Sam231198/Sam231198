@@ -19,62 +19,51 @@
 
 ## 🧑‍💻 Sobre mim
 
-- 💼 Back-end developer com 5+ anos de experiência
-- 🎓 Bacharel em Sistemas de Informação · Faculdade JK (2021)
-- 📍 Brasília, DF · aberto a oportunidades remotas
-- 📬 samuelmarques231198@gmail.com
+- 💼 **Experiência:** Desenvolvedor Back-end com 5+ anos de atuação.
+- 🎓 **Formação:** Bacharel em Sistemas de Informação pela Faculdade JK (2021).
+- 📍 **Localização:** Brasília, DF (Disponível para oportunidades remotas).
+- ⚙️ **Foco:** Arquitetura escalável, otimização de consultas e automação de processos.
 
 ---
 
-## 🛠 Stack técnica
+## 🛠 Stack Técnica
 
-### Linguagens
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=FFD43B)
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+### 🚀 Principais Tecnologias
+<p align="left">
+  <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" />
+</p>
 
-### Frameworks & Libs
-![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
-![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-
-### Banco de Dados
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
-![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-
-### Infra & Ferramentas
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
-![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)
+### 🛠️ Outras Ferramentas & Linguagens
+- **Linguagens:** JavaScript (ES6+), TypeScript, Python, Java.
+- **Frameworks:** Node.js, Spring Boot, Vue.js, React.
+- **Bancos:** MySQL, MariaDB, MongoDB.
+- **DevOps:** GitHub Actions, Linux, Swagger, Postman.
 
 ---
 
-## 📊 GitHub Metrics
+## 📊 Estatísticas Dinâmicas
 
 <div align="center">
-  <img src="/github-metrics.svg" alt="Metrics" width="100%">
+  <img src="github-metrics.svg" alt="Metrics" width="100%">
 </div>
 
 ---
 
-## 🎮 Hobbies
+## 🎮 Hobbies & Interesses
 
-- 🎮 Jogar **Genshin Impact**
-- 📺 Assistir animes:
-  - Naruto 🍥
-  - That Time I Got Reincarnated as a Slime (Rimuru Tempest) 🟦
-  - Attack on Titan ⚔️
-  - Darling in the FranXX 💕
-  - 86 ⚙️
-- 🎶 Música e cultura pop japonesa
-- ☕ Café + programação = combinação perfeita
+- 🐉 **Genshin Impact:** Aventureiro em Teyvat nas horas vagas.
+- 📺 **Anime Enthusiast:**
+  - *Naruto* 🍥 · *Slime* (Rimuru Tempest) 🟦
+  - *Attack on Titan* ⚔️ · *86* ⚙️ · *Darling in the FranXX* 💕
+- 🎶 **Cultura Pop:** Fã de música e cultura japonesa.
+- ☕ **Combustível:** Café é o que transforma código em realidade.
+
+---
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" />
+</p>
