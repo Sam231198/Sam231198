@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 from datetime import datetime, timezone, timedelta
@@ -64,22 +65,75 @@ def get_repo_languages(owner: str, repo: str) -> dict[str, int]:
     return data if isinstance(data, dict) else {}
 
 
-def get_release_downloads(owner: str, repo: str) -> int:
-    downloads = 0
-    page = 1
-    while True:
-        url = f"https://api.github.com/repos/{owner}/{repo}/releases"
-        params = {"per_page": 100, "page": page}
-        releases = github_get(url, params=params)
-        if not isinstance(releases, list):
-            break
-        for release in releases:
-            for asset in release.get("assets", []):
-                downloads += asset.get("download_count", 0)
-        if len(releases) < 100:
-            break
-        page += 1
-    return downloads
+FRAMEWORK_SIGNATURES: dict[str, list[tuple[str, str]]] = {
+    # manifest_filename -> list of (dependency_substring, framework_display_name)
+    "composer.json": [
+        ("laravel/framework", "Laravel"),
+        ("symfony/", "Symfony"),
+        ("cakephp/", "CakePHP"),
+        ("codeigniter4/", "CodeIgniter"),
+        ("yiisoft/", "Yii"),
+    ],
+    "package.json": [
+        ("next", "Next.js"),
+        ("nuxt", "Nuxt"),
+        ("@angular/core", "Angular"),
+        ("react", "React"),
+        ("vue", "Vue"),
+        ("svelte", "Svelte"),
+        ("@nestjs/core", "NestJS"),
+        ("express", "Express"),
+        ("astro", "Astro"),
+        ("vite", "Vite"),
+    ],
+    "requirements.txt": [
+        ("django", "Django"),
+        ("flask", "Flask"),
+        ("fastapi", "FastAPI"),
+    ],
+    "pyproject.toml": [
+        ("django", "Django"),
+        ("flask", "Flask"),
+        ("fastapi", "FastAPI"),
+    ],
+}
+
+
+def get_file_content(owner: str, repo: str, path: str) -> str | None:
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+    data = github_get(url)
+    if not isinstance(data, dict):
+        return None
+    content_b64 = data.get("content")
+    if not content_b64:
+        return None
+    try:
+        return base64.b64decode(content_b64).decode("utf-8", errors="ignore")
+    except (ValueError, TypeError):
+        return None
+
+
+def detect_frameworks(repos: list[dict]) -> list[tuple[str, int]]:
+    counts: dict[str, int] = {}
+    for repo in repos:
+        if repo.get("fork"):
+            continue
+        owner = repo.get("owner", {}).get("login", GITHUB_OWNER)
+        repo_name = repo.get("name")
+        if not repo_name:
+            continue
+        found_in_repo: set[str] = set()
+        for manifest, signatures in FRAMEWORK_SIGNATURES.items():
+            content = get_file_content(owner, repo_name, manifest)
+            if not content:
+                continue
+            lowered = content.lower()
+            for dep_key, fw_name in signatures:
+                if dep_key in lowered:
+                    found_in_repo.add(fw_name)
+        for fw_name in found_in_repo:
+            counts[fw_name] = counts.get(fw_name, 0) + 1
+    return sorted(counts.items(), key=lambda item: item[1], reverse=True)[:6]
 
 
 def resumo_periodos(owner: str, repo: str) -> dict[str, int]:
@@ -93,6 +147,20 @@ def resumo_periodos(owner: str, repo: str) -> dict[str, int]:
         "semana": get_repo_commit_count(owner, repo, semana),
         "mes": get_repo_commit_count(owner, repo, mes),
     }
+
+
+def get_weekly_commits_per_day(owner: str, repo: str) -> list[int]:
+    now = datetime.now(timezone.utc)
+    today = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+    counts = []
+    for i in range(6, -1, -1):
+        day_start = today - timedelta(days=i)
+        day_end = day_start + timedelta(days=1)
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        params = {"since": day_start.isoformat(), "until": day_end.isoformat(), "per_page": 100}
+        data = github_get(url, params=params)
+        counts.append(len(data) if isinstance(data, list) else 0)
+    return counts
 
 
 def top_languages(repos: list[dict]) -> list[tuple[str, int]]:
@@ -112,67 +180,213 @@ def top_languages(repos: list[dict]) -> list[tuple[str, int]]:
 
 
 def gerar_svg(metrics: dict) -> str:
-    width = 800
-    height = 380
-    padding = 28
-    chart_x = 300
-    chart_y = 90
-    chart_width = 450
-    bar_height = 40
-    gap = 16
+    width = 820
+    padding = 24
+    card_x = padding
+    card_w = width - 2 * padding
+    bar_inner_pad = 18
+    gap = 12
 
     top_langs = metrics["top_languages"]
-    total_bytes = sum(bytes_count for _, bytes_count in top_langs) or 1
-    colors = ["#FF7F50", "#1E90FF", "#32CD32", "#FFDC00", "#A020F0"]
+    frameworks = metrics.get("frameworks", [])
+    daily_commits = metrics.get("daily_commits", [0] * 7)
+    week_commits = metrics["commits"]["semana"]
+    total_bytes = sum(b for _, b in top_langs) or 1
+    lang_colors = ["#f97316", "#3b82f6", "#22c55e", "#eab308", "#a855f7"]
+    PI = 3.141592653589793
 
-    stack_segments = []
-    x_offset = chart_x
-    for idx, (lang, bytes_count) in enumerate(top_langs):
-        width_segment = max(24, int(chart_width * (bytes_count / total_bytes)))
-        fill = colors[idx % len(colors)]
-        label_color = "#111827" if fill in {"#FFDC00", "#32CD32"} else "#ffffff"
+    # ---- helpers ----
+    def _score_color(val):
+        if val is None: return "#6b7280"
+        v = int(val)
+        if v >= 90: return "#22c55e"
+        if v >= 70: return "#eab308"
+        if v >= 50: return "#f97316"
+        return "#ef4444"
 
-        stack_segments.append(
-            f"<rect x='{x_offset}' y='{chart_y}' width='{width_segment}' height='{bar_height}' rx='10' fill='{fill}' />"
-            f"<text x='{x_offset + 10}' y='{chart_y + 25}' fill='{label_color}' font-size='14' font-weight='700'>{lang}</text>"
-            f"<text x='{x_offset + 10}' y='{chart_y + 42}' fill='{label_color}' font-size='12'>{bytes_count:,} bytes</text>"
+    # ==============================
+    # ROW 1: Commits da Semana
+    # ==============================
+    commits_card_y = 70
+    commits_card_h = 140
+    num_area_w = 190
+    num_cx = card_x + num_area_w / 2
+
+    spark_x = card_x + num_area_w + 20
+    spark_w = card_w - num_area_w - 24
+    spark_y = commits_card_y + 22
+    spark_h = commits_card_h - 52
+
+    def _sparkline(daily: list[int]) -> str:
+        n = len(daily)
+        if n < 2:
+            return ""
+        max_v = max(daily) or 1
+        pts = [
+            (spark_x + i * spark_w / (n - 1), spark_y + spark_h - (v / max_v) * spark_h * 0.85)
+            for i, v in enumerate(daily)
+        ]
+        fill_path = (
+            f"M {pts[0][0]:.1f},{pts[0][1]:.1f} "
+            + " ".join(f"L {px:.1f},{py:.1f}" for px, py in pts[1:])
+            + f" L {pts[-1][0]:.1f},{spark_y + spark_h:.1f} L {pts[0][0]:.1f},{spark_y + spark_h:.1f} Z"
         )
-        x_offset += width_segment
+        line_pts = " ".join(f"{px:.1f},{py:.1f}" for px, py in pts)
+        now = datetime.now(timezone.utc)
+        labels = ""
+        for i in range(n):
+            d = now - timedelta(days=n - 1 - i)
+            lx = pts[i][0]
+            labels += f"<text x='{lx:.1f}' y='{spark_y + spark_h + 14}' fill='#4b5563' font-family='sans-serif' font-size='9' text-anchor='middle'>{d.day:02d}/{d.month:02d}</text>"
+        return (
+            f"<path d='{fill_path}' fill='#22c55e' fill-opacity='0.15' />"
+            f"<polyline points='{line_pts}' fill='none' stroke='#22c55e' stroke-width='2.5' stroke-linejoin='round' stroke-linecap='round' />"
+            + labels
+        )
 
-    top_langs_text = ", ".join(lang for lang, _ in top_langs)
-    profile_note = "Perfil não disponível publicamente via API GitHub" if metrics["profile_views"] is None else f'Visitas: {metrics["profile_views"]}'
+    spark_svg = _sparkline(daily_commits)
 
-    return f"""
-<svg xmlns='http://www.w3.org/2000/svg' width='{width}' height='{height}' viewBox='0 0 {width} {height}'>
+    # ==============================
+    # ROW 2: Linguagens
+    # ==============================
+    lang_card_y = commits_card_y + commits_card_h + gap
+    lang_header_h = 34
+    row_h = 32
+    lang_card_h = lang_header_h + row_h * max(len(top_langs), 1) + 12
+    bar_name_w = 120
+    bar_pct_w = 56
+    bar_track_x = card_x + bar_inner_pad + bar_name_w
+    bar_track_w = card_w - bar_inner_pad - bar_name_w - bar_pct_w - bar_inner_pad
+    bar_h = 10
+
+    lang_rows = []
+    for idx, (lang, bytes_count) in enumerate(top_langs):
+        pct = bytes_count / total_bytes
+        row_y = lang_card_y + lang_header_h + idx * row_h
+        fill = lang_colors[idx % len(lang_colors)]
+        bar_fill_w = max(2, int(bar_track_w * pct))
+        ty = row_y + 20
+        lang_rows.append(
+            f"<text x='{card_x + bar_inner_pad}' y='{ty}' fill='#e5e7eb' font-family='sans-serif' font-size='13' font-weight='600'>{lang}</text>"
+            f"<rect x='{bar_track_x}' y='{ty - 8}' width='{bar_track_w}' height='{bar_h}' rx='5' fill='#1e3a4a' />"
+            f"<rect x='{bar_track_x}' y='{ty - 8}' width='{bar_fill_w}' height='{bar_h}' rx='5' fill='{fill}' />"
+            f"<text x='{bar_track_x + bar_track_w + 10}' y='{ty}' fill='#9ca3af' font-family='sans-serif' font-size='12'>{pct * 100:.1f}%</text>"
+        )
+
+    # ==============================
+    # ROW 3: Frameworks
+    # ==============================
+    fw_card_y = lang_card_y + lang_card_h + gap
+    fw_card_h = 100
+    fw_colors = ["#3b82f6", "#eab308", "#22d3ee", "#ec4899", "#a855f7", "#f97316"]
+    fw_area_x = card_x + bar_inner_pad
+    fw_area_w = card_w - 2 * bar_inner_pad
+    stacked_bar_h = 16
+    stacked_bar_y = fw_card_y + 46
+    legend_y = fw_card_y + 76
+
+    fw_bars = []
+    if frameworks:
+        total_fw = sum(count for _, count in frameworks) or 1
+        x_cursor = fw_area_x
+        for idx, (fw_name, count) in enumerate(frameworks):
+            seg_w = max(2, int(fw_area_w * count / total_fw))
+            color = fw_colors[idx % len(fw_colors)]
+            fw_bars.append(
+                f"<rect x='{x_cursor}' y='{stacked_bar_y}' width='{seg_w}' height='{stacked_bar_h}' rx='0' fill='{color}' />"
+            )
+            leg_x = fw_area_x + idx * (fw_area_w / len(frameworks))
+            fw_bars.append(
+                f"<rect x='{leg_x}' y='{legend_y}' width='10' height='10' rx='2' fill='{color}' />"
+                f"<text x='{leg_x + 14}' y='{legend_y + 9}' fill='#d1d5db' font-family='sans-serif' font-size='11'>{fw_name}</text>"
+            )
+            x_cursor += seg_w
+        fw_bars.insert(0,
+            f"<rect x='{fw_area_x}' y='{stacked_bar_y}' width='{fw_area_w}' height='{stacked_bar_h}' rx='8' fill='#1e3a4a' />"
+        )
+    else:
+        fw_bars.append(
+            f"<text x='{fw_area_x}' y='{fw_card_y + 60}' fill='#6b7280' font-family='sans-serif' font-size='13'>Nenhum framework detectado.</text>"
+        )
+
+    # ==============================
+    # ROW 4: Lighthouse
+    # ==============================
+    lh_card_y = fw_card_y + fw_card_h + gap
+    lh_card_h = 134
+    lh_items = [
+        ("Performance", metrics.get("performance")),
+        ("Accessibility", metrics.get("accessibility")),
+        ("Best Practices", metrics.get("best_practices")),
+        ("SEO", metrics.get("seo")),
+    ]
+    r = 30
+    stroke_w = 5
+    circ = 2 * PI * r
+    lh_col_w = card_w / len(lh_items)
+    lh_cy = lh_card_y + 62
+
+    lh_gauges = []
+    for idx, (label, val) in enumerate(lh_items):
+        cx = card_x + lh_col_w * (idx + 0.5)
+        color = _score_color(val)
+        text_val = str(int(val)) if val is not None else "—"
+        if val is not None:
+            pct = max(0, min(100, int(val))) / 100
+            dash = pct * circ
+            arc = (
+                f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='{color}' stroke-width='{stroke_w}' "
+                f"stroke-dasharray='{dash:.1f} {circ:.1f}' stroke-linecap='round' "
+                f"transform='rotate(-90 {cx:.1f} {lh_cy})' />"
+            )
+        else:
+            arc = (
+                f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='#374151' "
+                f"stroke-width='{stroke_w}' stroke-dasharray='0 {circ:.1f}' />"
+            )
+        bg = f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='#334155' stroke-width='{stroke_w}' />"
+        lh_gauges.append(
+            f"{bg}{arc}"
+            f"<text x='{cx:.1f}' y='{lh_cy + 7}' fill='#ffffff' font-family='sans-serif' font-size='17' font-weight='700' text-anchor='middle'>{text_val}</text>"
+            f"<text x='{cx:.1f}' y='{lh_cy + r + 17}' fill='#9ca3af' font-family='sans-serif' font-size='10' text-anchor='middle'>{label}</text>"
+        )
+
+    height = lh_card_y + lh_card_h + 40
+
+    return f"""<svg xmlns='http://www.w3.org/2000/svg' width='{width}' height='{height}' viewBox='0 0 {width} {height}'>
   <style>
-    .bg {{ fill: #111827; }}
-    .title {{ font: bold 26px sans-serif; fill: #f8fafc; }}
-    .label {{ font: 16px sans-serif; fill: #d1d5db; }}
-    .value {{ font: bold 22px sans-serif; fill: #ffffff; }}
-    .small {{ font: 14px sans-serif; fill: #9ca3af; }}
-    .card {{ fill: #1f2937; stroke: #374151; stroke-width: 1; rx: 18; }}
+    .title {{ font: bold 22px sans-serif; fill: #f8fafc; }}
+    .small {{ font: 12px sans-serif; fill: #9ca3af; }}
+    .section {{ font: bold 13px sans-serif; fill: #94a3b8; letter-spacing: 1px; text-transform: uppercase; }}
   </style>
 
-  <rect width='100%' height='100%' class='bg' rx='24' />
-  <text x='{padding}' y='46' class='title'>📊 Métricas GitHub</text>
+  <rect x='0' y='0' width='{width}' height='{height}' rx='16' fill='#0f172a' />
+  <text x='{padding}' y='40' class='title'>Métricas GitHub</text>
+  <text x='{padding}' y='58' class='small'>@{GITHUB_OWNER}</text>
 
-  <rect x='{padding}' y='70' width='252' height='120' class='card' />
-  <text x='{padding + 16}' y='98' class='label'>Commits</text>
-  <text x='{padding + 16}' y='128' class='value'>Hoje: {metrics['commits']['hoje']}</text>
-  <text x='{padding + 16}' y='156' class='value'>Semana: {metrics['commits']['semana']}</text>
-  <text x='{padding + 16}' y='184' class='value'>Mês: {metrics['commits']['mes']}</text>
+  <!-- ROW 1: Commits da Semana -->
+  <rect x='{card_x}' y='{commits_card_y}' width='{card_w}' height='{commits_card_h}' rx='12' fill='#1e293b' stroke='#1e3a4a' />
+  <text x='{card_x + bar_inner_pad}' y='{commits_card_y + 22}' class='section'>Commits da Semana</text>
+  <text x='{num_cx:.1f}' y='{commits_card_y + 88}' fill='#ffffff' font-family='sans-serif' font-size='52' font-weight='700' text-anchor='middle'>{week_commits}</text>
+  <text x='{num_cx:.1f}' y='{commits_card_y + 110}' fill='#9ca3af' font-family='sans-serif' font-size='10' letter-spacing='2' text-anchor='middle'>SEMANA</text>
+  <line x1='{card_x + num_area_w}' y1='{commits_card_y + 16}' x2='{card_x + num_area_w}' y2='{commits_card_y + commits_card_h - 16}' stroke='#334155' />
+  {spark_svg}
 
-  <rect x='{padding}' y='208' width='252' height='100' class='card' />
-  <text x='{padding + 16}' y='236' class='label'>Projetos criados</text>
-  <text x='{padding + 16}' y='274' class='value'>{metrics['repos_count']}</text>
-  <text x='{padding + 16}' y='306' class='label'>Downloads de releases</text>
-  <text x='{padding + 16}' y='334' class='value'>{metrics['release_downloads']}</text>
+  <!-- ROW 2: Linguagens -->
+  <rect x='{card_x}' y='{lang_card_y}' width='{card_w}' height='{lang_card_h}' rx='12' fill='#1e293b' stroke='#1e3a4a' />
+  <text x='{card_x + bar_inner_pad}' y='{lang_card_y + 22}' class='section'>Linguagens mais usadas</text>
+  {''.join(lang_rows)}
 
-  <rect x='{chart_x - 16}' y='{chart_y - 28}' width='{chart_width + 32}' height='{bar_height + 36}' class='card' />
-  <text x='{chart_x}' y='{chart_y - 6}' class='label'>Stacks mais usadas (barra empilhada)</text>
-  {''.join(stack_segments)}
+  <!-- ROW 3: Frameworks -->
+  <rect x='{card_x}' y='{fw_card_y}' width='{card_w}' height='{fw_card_h}' rx='12' fill='#1e293b' stroke='#1e3a4a' />
+  <text x='{card_x + bar_inner_pad}' y='{fw_card_y + 24}' class='section'>Frameworks detectados</text>
+  {''.join(fw_bars)}
 
-  <text x='{padding}' y='368' class='small'>{profile_note}</text>
+  <!-- ROW 4: Lighthouse -->
+  <rect x='{card_x}' y='{lh_card_y}' width='{card_w}' height='{lh_card_h}' rx='12' fill='#1e293b' stroke='#1e3a4a' />
+  <text x='{card_x + bar_inner_pad}' y='{lh_card_y + 22}' class='section'>Lighthouse</text>
+  {''.join(lh_gauges)}
+
 </svg>
 """
 
@@ -188,13 +402,13 @@ if __name__ == "__main__":
     metrics = {
         "top_languages": top_languages(repos_criados),
         "commits": resumo_periodos(GITHUB_OWNER, GITHUB_REPO),
+        "daily_commits": get_weekly_commits_per_day(GITHUB_OWNER, GITHUB_REPO),
         "repos_count": len(repos_criados),
-        "release_downloads": sum(
-            get_release_downloads(GITHUB_OWNER, repo.get("name"))
-            for repo in repos_criados
-            if repo.get("name")
-        ),
-        "profile_views": None,
+        "frameworks": detect_frameworks(repos_criados),
+        "performance": os.getenv("LIGHTHOUSE_PERFORMANCE"),
+        "accessibility": os.getenv("LIGHTHOUSE_ACCESSIBILITY"),
+        "best_practices": os.getenv("LIGHTHOUSE_BEST_PRACTICES"),
+        "seo": os.getenv("LIGHTHOUSE_SEO"),
     }
 
     svg = gerar_svg(metrics)
@@ -203,6 +417,5 @@ if __name__ == "__main__":
         "repos_count": metrics["repos_count"],
         "top_languages": metrics["top_languages"],
         "commits": metrics["commits"],
-        "release_downloads": metrics["release_downloads"],
-        "profile_views": "não disponível via API GitHub",
+        "frameworks": metrics["frameworks"],
     }, indent=2, ensure_ascii=False))
