@@ -1,20 +1,27 @@
-name: Metrics
+name: metrics
 on:
-  schedule: [{cron: "0 0 * * *"}] # Atualiza todo dia à meia-noite
+  schedule:
+    - cron: "0 */6 * * *" # Roda a cada 6 horas
   workflow_dispatch: # Permite rodar manualmente
+
 jobs:
-  github-metrics:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: lowlighter/metrics@latest
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          token: ${{ secrets.METRICS_TOKEN }}
-          user: samuelmarques231198 # Seu usuário
-          template: classic
-          base: header, activity, community, repositories, metadata
-          config_timezone: America/Sao_Paulo
-          plugin_languages: yes
-          plugin_languages_ignored: html, css
-          plugin_habits: yes
-          plugin_habits_charts: yes
-          plugin_achievements: yes
+          python-workers: '3.x'
+
+      - name: Run Script
+        run: python generate_metrics.py
+
+      - name: Commit and Push if changed
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add my_custom_metric.svg
+          git commit -m "Update metrics SVG" || exit 0
+          git push
