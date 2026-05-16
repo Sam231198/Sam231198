@@ -59,21 +59,22 @@
 
 ---
 
-## 📊 GitHub Stats
+## 📊 GitHub Metrics
 
 <div align="center">
-  <!-- Linguagens mais usadas -->
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sam231198&layout=compact&theme=github_dark&hide_border=true&cache_seconds=1800" height="180"/>
-  
-  <!-- Estatísticas gerais -->
-  <img src="https://github-readme-stats.vercel.app/api?username=Sam231198&show_icons=true&theme=github_dark&hide_border=true" height="180"/>
+  <img src="/github-metrics.svg" alt="Metrics" width="100%">
 </div>
 
-<div align="center">
-  <!-- Streak -->
-  <img src="https://streak-stats.demolab.com?user=Sam231198&theme=github-dark&hide_border=true&date_format=j%20M%5B%20Y%5D" height="180"/>
-</div>
+---
 
-<div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=Sam231198&theme=github-dark&hide_border=true" height="250"/>
-</div>
+## 🎮 Hobbies
+
+- 🎮 Jogar **Genshin Impact**
+- 📺 Assistir animes:
+  - Naruto 🍥
+  - That Time I Got Reincarnated as a Slime (Rimuru Tempest) 🟦
+  - Attack on Titan ⚔️
+  - Darling in the FranXX 💕
+  - 86 ⚙️
+- 🎶 Música e cultura pop japonesa
+- ☕ Café + programação = combinação perfeita
