@@ -14,7 +14,7 @@ HEADERS = {
 if GITHUB_TOKEN:
     HEADERS["Authorization"] = f"token {GITHUB_TOKEN}"
 
-SVG_FILE = "my_custom_metric.svg"
+SVG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_custom_metric.svg"))
 
 
 def github_get(url: str, params: dict | None = None) -> list | dict | None:
@@ -112,31 +112,34 @@ def top_languages(repos: list[dict]) -> list[tuple[str, int]]:
 
 
 def gerar_svg(metrics: dict) -> str:
-    width = 760
-    height = 360
+    width = 800
+    height = 380
     padding = 28
-    chart_x = 280
+    chart_x = 300
     chart_y = 90
-    chart_width = 440
-    chart_height = 220
-    bar_height = 32
+    chart_width = 450
+    bar_height = 40
     gap = 16
 
     top_langs = metrics["top_languages"]
     total_bytes = sum(bytes_count for _, bytes_count in top_langs) or 1
     colors = ["#FF7F50", "#1E90FF", "#32CD32", "#FFDC00", "#A020F0"]
 
-    bars = []
+    stack_segments = []
+    x_offset = chart_x
     for idx, (lang, bytes_count) in enumerate(top_langs):
-        y = chart_y + idx * (bar_height + gap)
-        bar_width = int(chart_width * (bytes_count / total_bytes))
-        bars.append(
-            f"<rect x='{chart_x}' y='{y}' width='{bar_width}' height='{bar_height}' rx='10' fill='{colors[idx % len(colors)]}' />"
-            f"<text x='{chart_x + 10}' y='{y + 20}' fill='#111827' font-size='14' font-weight='700'>{lang}</text>"
-            f"<text x='{chart_x + 10}' y='{y + 38}' fill='#111827' font-size='12'>{bytes_count:,} bytes</text>"
-        )
+        width_segment = max(24, int(chart_width * (bytes_count / total_bytes)))
+        fill = colors[idx % len(colors)]
+        label_color = "#111827" if fill in {"#FFDC00", "#32CD32"} else "#ffffff"
 
-    top_langs_text = " · ".join(lang for lang, _ in top_langs)
+        stack_segments.append(
+            f"<rect x='{x_offset}' y='{chart_y}' width='{width_segment}' height='{bar_height}' rx='10' fill='{fill}' />"
+            f"<text x='{x_offset + 10}' y='{chart_y + 25}' fill='{label_color}' font-size='14' font-weight='700'>{lang}</text>"
+            f"<text x='{x_offset + 10}' y='{chart_y + 42}' fill='{label_color}' font-size='12'>{bytes_count:,} bytes</text>"
+        )
+        x_offset += width_segment
+
+    top_langs_text = ", ".join(lang for lang, _ in top_langs)
     profile_note = "Perfil não disponível publicamente via API GitHub" if metrics["profile_views"] is None else f'Visitas: {metrics["profile_views"]}'
 
     return f"""
@@ -147,27 +150,29 @@ def gerar_svg(metrics: dict) -> str:
     .label {{ font: 16px sans-serif; fill: #d1d5db; }}
     .value {{ font: bold 22px sans-serif; fill: #ffffff; }}
     .small {{ font: 14px sans-serif; fill: #9ca3af; }}
+    .card {{ fill: #1f2937; stroke: #374151; stroke-width: 1; rx: 18; }}
   </style>
 
   <rect width='100%' height='100%' class='bg' rx='24' />
   <text x='{padding}' y='46' class='title'>📊 Métricas GitHub</text>
-  <text x='{padding}' y='82' class='label'>Stacks mais usadas:</text>
-  <text x='{padding}' y='104' class='small'>{top_langs_text or 'Nenhuma linguagem detectada'}</text>
 
-  <text x='{padding}' y='152' class='label'>Commits</text>
-  <text x='{padding}' y='180' class='value'>Hoje: {metrics['commits']['hoje']}</text>
-  <text x='{padding}' y='210' class='value'>Semana: {metrics['commits']['semana']}</text>
-  <text x='{padding}' y='240' class='value'>Mês: {metrics['commits']['mes']}</text>
+  <rect x='{padding}' y='70' width='252' height='120' class='card' />
+  <text x='{padding + 16}' y='98' class='label'>Commits</text>
+  <text x='{padding + 16}' y='128' class='value'>Hoje: {metrics['commits']['hoje']}</text>
+  <text x='{padding + 16}' y='156' class='value'>Semana: {metrics['commits']['semana']}</text>
+  <text x='{padding + 16}' y='184' class='value'>Mês: {metrics['commits']['mes']}</text>
 
-  <text x='{padding}' y='278' class='label'>Projetos criados:</text>
-  <text x='{padding + 220}' y='278' class='value'>{metrics['repos_count']}</text>
+  <rect x='{padding}' y='208' width='252' height='100' class='card' />
+  <text x='{padding + 16}' y='236' class='label'>Projetos criados</text>
+  <text x='{padding + 16}' y='274' class='value'>{metrics['repos_count']}</text>
+  <text x='{padding + 16}' y='306' class='label'>Downloads de releases</text>
+  <text x='{padding + 16}' y='334' class='value'>{metrics['release_downloads']}</text>
 
-  <text x='{padding}' y='308' class='label'>Downloads de releases:</text>
-  <text x='{padding + 280}' y='308' class='value'>{metrics['release_downloads']}</text>
+  <rect x='{chart_x - 16}' y='{chart_y - 28}' width='{chart_width + 32}' height='{bar_height + 36}' class='card' />
+  <text x='{chart_x}' y='{chart_y - 6}' class='label'>Stacks mais usadas (barra empilhada)</text>
+  {''.join(stack_segments)}
 
-  <text x='{padding}' y='336' class='small'>{profile_note}</text>
-
-  {''.join(bars)}
+  <text x='{padding}' y='368' class='small'>{profile_note}</text>
 </svg>
 """
 
