@@ -16,7 +16,7 @@ jobs:
           python-workers: '3.x'
 
       - name: Run Script
-        run: python generate_metrics.py
+        run: python app/generate_metrics.py
 
       - name: Commit and Push if changed
         run: |
