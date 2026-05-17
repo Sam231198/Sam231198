@@ -29,10 +29,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_OWNER: ${{ github.repository_owner }}
           GITHUB_REPO: ${{ github.event.repository.name }}
-          LIGHTHOUSE_PERFORMANCE: ${{ secrets.LIGHTHOUSE_PERFORMANCE }}
-          LIGHTHOUSE_ACCESSIBILITY: ${{ secrets.LIGHTHOUSE_ACCESSIBILITY }}
-          LIGHTHOUSE_BEST_PRACTICES: ${{ secrets.LIGHTHOUSE_BEST_PRACTICES }}
-          LIGHTHOUSE_SEO: ${{ secrets.LIGHTHOUSE_SEO }}
         run: python app/generate_metrics.py
 
       - name: Commit e push do SVG atualizado

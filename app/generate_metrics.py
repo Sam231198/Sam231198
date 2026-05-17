@@ -193,16 +193,6 @@ def gerar_svg(metrics: dict) -> str:
     week_commits = metrics["commits"]["semana"]
     total_bytes = sum(b for _, b in top_langs) or 1
     lang_colors = ["#f97316", "#3b82f6", "#22c55e", "#eab308", "#a855f7"]
-    PI = 3.141592653589793
-
-    # ---- helpers ----
-    def _score_color(val):
-        if val is None: return "#6b7280"
-        v = int(val)
-        if v >= 90: return "#22c55e"
-        if v >= 70: return "#eab308"
-        if v >= 50: return "#f97316"
-        return "#ef4444"
 
     # ==============================
     # ROW 1: Commits da Semana
@@ -309,49 +299,7 @@ def gerar_svg(metrics: dict) -> str:
             f"<text x='{fw_area_x}' y='{fw_card_y + 60}' fill='#6b7280' font-family='sans-serif' font-size='13'>Nenhum framework detectado.</text>"
         )
 
-    # ==============================
-    # ROW 4: Lighthouse
-    # ==============================
-    lh_card_y = fw_card_y + fw_card_h + gap
-    lh_card_h = 134
-    lh_items = [
-        ("Performance", metrics.get("performance")),
-        ("Accessibility", metrics.get("accessibility")),
-        ("Best Practices", metrics.get("best_practices")),
-        ("SEO", metrics.get("seo")),
-    ]
-    r = 30
-    stroke_w = 5
-    circ = 2 * PI * r
-    lh_col_w = card_w / len(lh_items)
-    lh_cy = lh_card_y + 62
-
-    lh_gauges = []
-    for idx, (label, val) in enumerate(lh_items):
-        cx = card_x + lh_col_w * (idx + 0.5)
-        color = _score_color(val)
-        text_val = str(int(val)) if val is not None else "—"
-        if val is not None:
-            pct = max(0, min(100, int(val))) / 100
-            dash = pct * circ
-            arc = (
-                f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='{color}' stroke-width='{stroke_w}' "
-                f"stroke-dasharray='{dash:.1f} {circ:.1f}' stroke-linecap='round' "
-                f"transform='rotate(-90 {cx:.1f} {lh_cy})' />"
-            )
-        else:
-            arc = (
-                f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='#374151' "
-                f"stroke-width='{stroke_w}' stroke-dasharray='0 {circ:.1f}' />"
-            )
-        bg = f"<circle cx='{cx:.1f}' cy='{lh_cy}' r='{r}' fill='none' stroke='#334155' stroke-width='{stroke_w}' />"
-        lh_gauges.append(
-            f"{bg}{arc}"
-            f"<text x='{cx:.1f}' y='{lh_cy + 7}' fill='#ffffff' font-family='sans-serif' font-size='17' font-weight='700' text-anchor='middle'>{text_val}</text>"
-            f"<text x='{cx:.1f}' y='{lh_cy + r + 17}' fill='#9ca3af' font-family='sans-serif' font-size='10' text-anchor='middle'>{label}</text>"
-        )
-
-    height = lh_card_y + lh_card_h + 40
+    height = fw_card_y + fw_card_h + 40
 
     return f"""<svg xmlns='http://www.w3.org/2000/svg' width='{width}' height='{height}' viewBox='0 0 {width} {height}'>
   <style>
@@ -382,11 +330,6 @@ def gerar_svg(metrics: dict) -> str:
   <text x='{card_x + bar_inner_pad}' y='{fw_card_y + 24}' class='section'>Frameworks detectados</text>
   {''.join(fw_bars)}
 
-  <!-- ROW 4: Lighthouse -->
-  <rect x='{card_x}' y='{lh_card_y}' width='{card_w}' height='{lh_card_h}' rx='12' fill='#1e293b' stroke='#1e3a4a' />
-  <text x='{card_x + bar_inner_pad}' y='{lh_card_y + 22}' class='section'>Lighthouse</text>
-  {''.join(lh_gauges)}
-
 </svg>
 """
 
@@ -405,10 +348,6 @@ if __name__ == "__main__":
         "daily_commits": get_weekly_commits_per_day(GITHUB_OWNER, GITHUB_REPO),
         "repos_count": len(repos_criados),
         "frameworks": detect_frameworks(repos_criados),
-        "performance": os.getenv("LIGHTHOUSE_PERFORMANCE"),
-        "accessibility": os.getenv("LIGHTHOUSE_ACCESSIBILITY"),
-        "best_practices": os.getenv("LIGHTHOUSE_BEST_PRACTICES"),
-        "seo": os.getenv("LIGHTHOUSE_SEO"),
     }
 
     svg = gerar_svg(metrics)
