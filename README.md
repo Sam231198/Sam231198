@@ -48,20 +48,3 @@
 ## 📊 Estatísticas Dinâmicas
 
 <img src="my_custom_metric.svg" alt="Minhas Métricas Customizadas" />
-
----
-
-## 🎮 Hobbies & Interesses
-
-- 🐉 **Genshin Impact:** Aventureiro em Teyvat nas horas vagas.
-- 📺 **Anime Enthusiast:**
-  - *Naruto* 🍥 · *Slime* (Rimuru Tempest) 🟦
-  - *Attack on Titan* ⚔️ · *86* ⚙️ · *Darling in the FranXX* 💕
-- 🎶 **Cultura Pop:** Fã de música e cultura japonesa.
-- ☕ **Combustível:** Café é o que transforma código em realidade.
-
----
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" />
-</p>
