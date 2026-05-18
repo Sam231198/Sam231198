@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "app/generate_metrics.py"
-      - ".github/workflows/update_metrics.yml"
   schedule:
     - cron: "0 3 * * *"   # Todo dia às 03:00 UTC (00:00 BRT)
   workflow_dispatch:       # Permite rodar manualmente
