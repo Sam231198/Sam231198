@@ -187,10 +187,12 @@ def top_languages(repos: list[dict]) -> list[tuple[str, int]]:
     # Blade é template do Laravel; Vue é framework
     totals.pop("Blade", None)
     totals.pop("Vue", None)
-    # Garantir linguagens solicitadas no SVG
-    for lang in ["JavaScript", "Python", "Go"]:
-        if lang not in totals:
-            totals[lang] = 0
+    totals.pop("HTML", None)
+    totals.pop("CSS", None)
+    totals.pop("Shell", None)
+    totals.pop("Dockerfile", None)
+    totals.pop("Makefile", None)
+
     sorted_langs = sorted(totals.items(), key=lambda item: item[1], reverse=True)
     return sorted_langs[:8]
 
