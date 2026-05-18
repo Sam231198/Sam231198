@@ -1,9 +1,9 @@
 name: Update GitHub Metrics SVG
 
 on:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   schedule:
     - cron: "0 3 * * *"   # Todo dia às 03:00 UTC (00:00 BRT)
   workflow_dispatch:       # Permite rodar manualmente

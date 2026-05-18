@@ -96,6 +96,12 @@ FRAMEWORK_SIGNATURES: dict[str, list[tuple[str, str]]] = {
         ("flask", "Flask"),
         ("fastapi", "FastAPI"),
     ],
+    "pom.xml": [
+        ("spring-boot", "Spring Boot"),
+    ],
+    "build.gradle": [
+        ("spring-boot", "Spring Boot"),
+    ],
 }
 
 
@@ -131,6 +137,9 @@ def detect_frameworks(repos: list[dict]) -> list[tuple[str, int]]:
             for dep_key, fw_name in signatures:
                 if dep_key in lowered:
                     found_in_repo.add(fw_name)
+        # TypeScript via tsconfig.json
+        if get_file_content(owner, repo_name, "tsconfig.json"):
+            found_in_repo.add("TypeScript")
         for fw_name in found_in_repo:
             counts[fw_name] = counts.get(fw_name, 0) + 1
     return sorted(counts.items(), key=lambda item: item[1], reverse=True)[:6]
@@ -175,8 +184,15 @@ def top_languages(repos: list[dict]) -> list[tuple[str, int]]:
         languages = get_repo_languages(owner, repo_name)
         for lang, bytes_count in languages.items():
             totals[lang] = totals.get(lang, 0) + bytes_count
+    # Blade é template do Laravel; Vue é framework
+    totals.pop("Blade", None)
+    totals.pop("Vue", None)
+    # Garantir linguagens solicitadas no SVG
+    for lang in ["JavaScript", "Python", "Go"]:
+        if lang not in totals:
+            totals[lang] = 0
     sorted_langs = sorted(totals.items(), key=lambda item: item[1], reverse=True)
-    return sorted_langs[:5]
+    return sorted_langs[:8]
 
 
 def gerar_svg(metrics: dict) -> str:
