@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>Back-end Developer · PHP · Laravel · PostgreSQL</b><br/>
-  Construindo APIs, pipelines de dados e sistemas escaláveis há 5+ anos.<br/>
+  Construindo APIs, pipelines de dados e sistemas escaláveis.<br/>
   Brasília, DF 🇧🇷
 </p>
 
